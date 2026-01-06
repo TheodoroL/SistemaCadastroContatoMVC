@@ -27,12 +27,13 @@ public class ContatoRepository : IContatoRepository
         return _bancoContext.Contatos.ToList();
     }
 
-    public void EditorContato(int id, ContatoModel contato)
+    public void EditorContato(ContatoModel contato)
     {
-        var contatoBuscado = ListarContatoPorId(id);
+        var contatoBuscado = ListarContatoPorId(contato.Id);
 
-        contato.Nome = contato.Nome;
-        contato.Email = contato.Email;
+        contatoBuscado.Nome = contato.Nome;
+        contatoBuscado.Email = contato.Email;
+        contatoBuscado.Telefone = contato.Telefone;
 
         _bancoContext.Contatos.Update(contatoBuscado);
         _bancoContext.SaveChanges();
@@ -50,5 +51,16 @@ public class ContatoRepository : IContatoRepository
         }
 
         return contatoBuscado;
+    }
+
+    public bool DeletarContato(int id)
+    {
+        var contatoBuscado = ListarContatoPorId(id);
+        if (contatoBuscado == null) return false;
+
+        _bancoContext.Contatos.Remove(contatoBuscado);
+        _bancoContext.SaveChanges();
+
+        return true;
     }
 }

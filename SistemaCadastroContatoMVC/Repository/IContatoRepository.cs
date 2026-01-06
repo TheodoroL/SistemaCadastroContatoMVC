@@ -8,5 +8,7 @@ public interface IContatoRepository
     List<ContatoModel> ListarContatos();
 
     ContatoModel ListarContatoPorId(int id);
-    void EditorContato(int id, ContatoModel contato);
+    void EditorContato(ContatoModel contato);
+
+    bool DeletarContato(int id);
 }

@@ -23,13 +23,19 @@ public class ContatoController : Controller
         return View();
     }
 
-    public IActionResult EditarContato()
+    [HttpGet]
+    public IActionResult EditarContato(int id)
     {
-        return View();
+        ContatoModel contato = _contatoRepository.ListarContatoPorId(id);
+        return View(contato);
     }
-    public IActionResult DeletarContato()
+
+    [HttpGet]
+    public IActionResult DeletarContato(int id)
     {
-        return View();
+        ContatoModel contato = _contatoRepository.ListarContatoPorId(id);
+
+        return View(contato);
     }
 
 
@@ -42,17 +48,27 @@ public class ContatoController : Controller
         return RedirectToAction("Index");
     }
 
-    [HttpPost("/{id}")]
-    public IActionResult EditarContato(int id, ContatoModel contato)
+    [HttpPost]
+    public IActionResult EditarContato(ContatoModel contato)
     {
         try
         {
-            var contatoEditado = _contatoRepository.EditorContato(id, contato);
+            Console.WriteLine(contato.Id);
+            _contatoRepository.EditorContato(contato);
             return RedirectToAction("Index");
         }
+
         catch (Exception erro)
         {
             return BadRequest(new { msg = "Houve um erro na edição do contato" });
         }
+
+    }
+
+    public IActionResult ConfirmacaoDeletarContato(int id)
+    {
+        _contatoRepository.DeletarContato(id);
+
+        return RedirectToAction("Index");
     }
 }
