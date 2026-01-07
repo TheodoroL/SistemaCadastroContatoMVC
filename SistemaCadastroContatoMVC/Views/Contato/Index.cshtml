@@ -13,6 +13,21 @@
         </a>
     </div>
 </div>
+@if (TempData["MensagemSucesso"] !=null){
+
+    <div class="alert alert-success" role="alert">
+        @TempData["MensagemSucesso"]
+        <button class="btn btn-danger btn-close-alert" aria-label="close">X</button>
+    </div>
+}
+@if (TempData["MensagemErro"] != null)
+{
+ <div class="alert alert-danger" role="alert">
+        <button class="btn btn-danger btn-close-alert" aria-label="close">X</button>
+        @TempData["MensagemErro"]
+   </div>
+}
+
 
 <h1 class="display-4 text-center">Listagem de Contatos</h1>
 

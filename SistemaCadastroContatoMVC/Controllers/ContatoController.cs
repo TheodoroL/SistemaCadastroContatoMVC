@@ -43,31 +43,58 @@ public class ContatoController : Controller
     [HttpPost]
     public IActionResult CriarContato(ContatoModel contato)
     {
-        _contatoRepository.CriarContato(contato);
+        try
+        {
+            if (!ModelState.IsValid) return View(contato);
 
-        return RedirectToAction("Index");
+            TempData["MensagemSucesso"] = $"Contato {contato.Nome} criado com sucesso!";
+            _contatoRepository.CriarContato(contato);
+
+            return RedirectToAction("Index");
+        }
+        catch (Exception erro)
+        {
+            TempData["MensagemErro"] = $"Ops, não foi possivel criado o contato! erro: {erro.Message}";
+
+            return RedirectToAction("Index");
+
+        }
     }
 
     [HttpPost]
     public IActionResult EditarContato(ContatoModel contato)
     {
+        if (!ModelState.IsValid) return View(contato);
+
         try
         {
-            Console.WriteLine(contato.Id);
+            TempData["MensagemSucesso"] = $"Contato {contato.Nome} atualizado com sucesso!";
+
             _contatoRepository.EditorContato(contato);
             return RedirectToAction("Index");
         }
 
         catch (Exception erro)
         {
-            return BadRequest(new { msg = "Houve um erro na edição do contato" });
+            TempData["MensagemErro"] = $"Ops,ouve um erro de atualizar o contato!, error : {erro.Message}";
+            return View("Index");
+
         }
 
     }
 
     public IActionResult ConfirmacaoDeletarContato(int id)
     {
-        _contatoRepository.DeletarContato(id);
+        var deletado = _contatoRepository.DeletarContato(id);
+
+        if (deletado)
+        {
+            TempData["MensagemSucesso"] = "Contato deletado com sucesso!";
+        }
+        else
+        {
+            TempData["MensagemErro"] = "Ops, não foi possível deletar o contato!";
+        }
 
         return RedirectToAction("Index");
     }
